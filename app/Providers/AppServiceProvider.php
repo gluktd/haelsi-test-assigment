@@ -27,8 +27,8 @@ class AppServiceProvider extends ServiceProvider
 
         Scramble::configure()
             ->expose(
-                ui: '/api/docs',
-                document: '/api/docs/openapi.json',
+                ui: '/docs',
+                document: '/docs/openapi.json',
             )
             ->routes(function (Route $route) {
                 return Str::startsWith($route->uri, 'api');

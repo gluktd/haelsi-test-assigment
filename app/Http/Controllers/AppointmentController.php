@@ -10,7 +10,12 @@ use App\Models\Appointment;
 class AppointmentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List paginated appointments ordered by most recent.
+     *
+     * Returns a paginated collection of appointments. Useful for building
+     * lists, tables, or infinite scrolls on the client.
+     *
+     * @operationId listAppointments
      */
     public function index()
     {
@@ -19,7 +24,12 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new appointment.
+     *
+     * Accepts validated appointment data and creates a new appointment
+     * record. Returns the created resource.
+     *
+     * @operationId createAppointment
      */
     public function store(StoreAppointmentRequest $request)
     {
@@ -30,7 +40,11 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get a single appointment by ID.
+     *
+     * Returns the appointment resource for the provided identifier.
+     *
+     * @operationId getAppointment
      */
     public function show(Appointment $appointment)
     {
@@ -38,7 +52,12 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing appointment.
+     *
+     * Applies the provided validated data to the specified appointment
+     * and returns the updated resource.
+     *
+     * @operationId updateAppointment
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
@@ -47,7 +66,12 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an appointment.
+     *
+     * Permanently removes the specified appointment and returns an empty
+     * 204 No Content response on success.
+     *
+     * @operationId deleteAppointment
      */
     public function destroy(Appointment $appointment)
     {

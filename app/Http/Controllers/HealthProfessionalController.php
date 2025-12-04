@@ -10,7 +10,12 @@ use App\Models\HealthProfessional;
 class HealthProfessionalController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List paginated health professionals ordered by most recent.
+     *
+     * Returns a paginated collection of health professionals for use in
+     * lists, tables, or infinite scrolling UIs.
+     *
+     * @operationId listHealthProfessionals
      */
     public function index()
     {
@@ -19,7 +24,12 @@ class HealthProfessionalController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new health professional.
+     *
+     * Accepts validated data and creates a new health professional record.
+     * Returns the created resource.
+     *
+     * @operationId createHealthProfessional
      */
     public function store(StoreHealthProfessionalRequest $request)
     {
@@ -30,7 +40,11 @@ class HealthProfessionalController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get a single health professional by ID.
+     *
+     * Returns the health professional resource for the provided identifier.
+     *
+     * @operationId getHealthProfessional
      */
     public function show(HealthProfessional $healthProfessional)
     {
@@ -38,7 +52,12 @@ class HealthProfessionalController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing health professional.
+     *
+     * Applies validated changes to the specified health professional and
+     * returns the updated resource.
+     *
+     * @operationId updateHealthProfessional
      */
     public function update(UpdateHealthProfessionalRequest $request, HealthProfessional $healthProfessional)
     {
@@ -47,7 +66,12 @@ class HealthProfessionalController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a health professional.
+     *
+     * Permanently removes the specified health professional and returns a
+     * 204 No Content response on success.
+     *
+     * @operationId deleteHealthProfessional
      */
     public function destroy(HealthProfessional $healthProfessional)
     {
