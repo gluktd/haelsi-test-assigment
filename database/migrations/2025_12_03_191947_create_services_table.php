@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ServiceTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->enum('type', ['consultation', 'appointment']);
+            $table->enum('type', array_map(fn(ServiceTypeEnum $e) => $e->value, ServiceTypeEnum::cases()));
             $table->timestamps();
         });
     }

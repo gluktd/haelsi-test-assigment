@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\ProfessionalTypeEnum;
 
 class UpdateHealthProfessionalRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateHealthProfessionalRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,8 @@ class UpdateHealthProfessionalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'type' => ['sometimes', 'required', new Enum(ProfessionalTypeEnum::class)],
         ];
     }
 }

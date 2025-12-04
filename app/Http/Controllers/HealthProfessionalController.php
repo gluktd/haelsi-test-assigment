@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHealthProfessionalRequest;
 use App\Http\Requests\UpdateHealthProfessionalRequest;
+use App\Http\Resources\HealthProfessionalResource;
 use App\Models\HealthProfessional;
 
 class HealthProfessionalController extends Controller
@@ -13,7 +14,8 @@ class HealthProfessionalController extends Controller
      */
     public function index()
     {
-        //
+        $pros = HealthProfessional::query()->latest()->paginate(15);
+        return HealthProfessionalResource::collection($pros);
     }
 
     /**
@@ -21,7 +23,10 @@ class HealthProfessionalController extends Controller
      */
     public function store(StoreHealthProfessionalRequest $request)
     {
-        //
+        $pro = HealthProfessional::create($request->validated());
+        return (new HealthProfessionalResource($pro))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -29,7 +34,7 @@ class HealthProfessionalController extends Controller
      */
     public function show(HealthProfessional $healthProfessional)
     {
-        //
+        return new HealthProfessionalResource($healthProfessional);
     }
 
     /**
@@ -37,7 +42,8 @@ class HealthProfessionalController extends Controller
      */
     public function update(UpdateHealthProfessionalRequest $request, HealthProfessional $healthProfessional)
     {
-        //
+        $healthProfessional->update($request->validated());
+        return new HealthProfessionalResource($healthProfessional);
     }
 
     /**
@@ -45,6 +51,7 @@ class HealthProfessionalController extends Controller
      */
     public function destroy(HealthProfessional $healthProfessional)
     {
-        //
+        $healthProfessional->delete();
+        return response()->noContent();
     }
 }

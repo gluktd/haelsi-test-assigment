@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->string('uuid')->unique();
+            $table->string('customer_email')->index();
+            $table->string('customer_phone_number')->nullable();;
+            $table->foreignId('health_professional_id')->constrained('health_professionals');
+            $table->foreignId('service_id')->constrained('services');
+            $table->timestamp('start_date_time');
+            $table->timestamp('end_date_time');
+            $table->boolean('confirmed')->default(false);
             $table->timestamps();
         });
     }

@@ -9,4 +9,14 @@ class HealthProfessional extends Model
 {
     /** @use HasFactory<\Database\Factories\HealthProfessionalFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'type',
+    ];
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }
