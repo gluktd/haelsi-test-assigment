@@ -28,7 +28,6 @@ trait ValidatesAppointmentBookingRules
     /**
      * Attach common BookingRules validation to the given validator.
      *
-     * @param Validator $validator
      * @param callable(): (array{
      *   format: VisitFormatEnum,
      *   service: Service|null,
@@ -42,7 +41,6 @@ trait ValidatesAppointmentBookingRules
             if ($validator->fails()) {
                 return;
             }
-
             $ctx = $resolveContext();
             if ($ctx === null) {
                 return;
@@ -65,11 +63,9 @@ trait ValidatesAppointmentBookingRules
                 return;
             }
 
-            // Convert stored types (strings) into enums
             $service = ServiceTypeEnum::from($serviceModel->type);
             $professional = ProfessionalTypeEnum::from($professionalModel->type);
 
-            // Validate service allowed for format
             $allowedServices = BookingRules::allowedServiceTypeEnums($format);
             if (! in_array($service, $allowedServices, true)) {
                 $validator->errors()->add(
@@ -78,7 +74,6 @@ trait ValidatesAppointmentBookingRules
                 );
             }
 
-            // Validate professional allowed for format + service
             $allowedProfessionals = BookingRules::allowedProfessionalTypeEnums($format, $service);
             if (! in_array($professional, $allowedProfessionals, true)) {
                 $validator->errors()->add(
@@ -87,7 +82,6 @@ trait ValidatesAppointmentBookingRules
                 );
             }
 
-            // If appointment type provided in context, validate it too
             if ($appointment instanceof AppointmentTypeEnum) {
                 $allowedAppointments = BookingRules::allowedAppointmentTypeEnums($format, $service);
                 if (! in_array($appointment, $allowedAppointments, true)) {

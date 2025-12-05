@@ -52,11 +52,9 @@ We’ll review your:
 
 ## 🚀 Getting Started
 
-1. **Clone the repository:**
+1. **Set up the application:**
 
    ```bash
-   git clone <repository_url>
-   cd <repository_directory>
    cp .env.example .env
    composer install
    php artisan key:generate
@@ -66,6 +64,8 @@ We’ll review your:
 
    ```bash
    ./vendor/bin/sail artisan migrate
+   ./vendor/bin/sail artisan db:seed
    ```
 3. **Check the docs:**
-   
+
+   Visit `http://localhost/docs`

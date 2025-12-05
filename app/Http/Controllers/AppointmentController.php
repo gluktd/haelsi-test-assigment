@@ -20,6 +20,7 @@ class AppointmentController extends Controller
     public function index()
     {
         $appointments = Appointment::query()->latest()->paginate(15);
+
         return AppointmentResource::collection($appointments);
     }
 
@@ -33,7 +34,8 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
-        $appointment = Appointment::create($request->validated());
+        $appointment = Appointment::query()->create($request->validated());
+
         return (new AppointmentResource($appointment))
             ->response()
             ->setStatusCode(201);
@@ -62,6 +64,7 @@ class AppointmentController extends Controller
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
         $appointment->update($request->validated());
+
         return new AppointmentResource($appointment);
     }
 
@@ -76,6 +79,7 @@ class AppointmentController extends Controller
     public function destroy(Appointment $appointment)
     {
         $appointment->delete();
+
         return response()->noContent();
     }
 }

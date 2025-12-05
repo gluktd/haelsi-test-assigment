@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->enum('type', array_map(fn(ServiceTypeEnum $e) => $e->value, ServiceTypeEnum::cases()));
+            $table->enum('type', array_map(fn (ServiceTypeEnum $e) => $e->value, ServiceTypeEnum::cases()));
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Appointment extends Model
 {
@@ -36,12 +37,12 @@ class Appointment extends Model
         });
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
     }
 
-    public function healthProfessional()
+    public function healthProfessional(): BelongsTo
     {
         return $this->belongsTo(HealthProfessional::class);
     }

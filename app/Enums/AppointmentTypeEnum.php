@@ -9,4 +9,12 @@ enum AppointmentTypeEnum: string
     case CONTROL = 'control';
     case EMERGENCY = 'emergency';
     case TELEMEDICINE = 'telemedicine';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::FOLLOW_UP => 'Follow Up',
+            default => ucfirst($this->value),
+        };
+    }
 }

@@ -9,4 +9,9 @@ enum ServiceTypeEnum: string
     case PROCEDURE = 'procedure';
     case THERAPY = 'therapy';
     case SURGERY = 'surgery';
+
+    public function getLabel(): string
+    {
+        return ucfirst($this->value);
+    }
 }

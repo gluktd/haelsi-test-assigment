@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ServiceTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class ServiceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->unique()->words(3, true),
+            'description' => $this->faker->sentence(8),
+            'type' => $this->faker->randomElement(array_map(fn ($e) => $e->value, ServiceTypeEnum::cases())),
         ];
     }
 }

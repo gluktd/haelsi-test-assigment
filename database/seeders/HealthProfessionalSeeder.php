@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\HealthProfessional;
 use Illuminate\Database\Seeder;
 
 class HealthProfessionalSeeder extends Seeder
@@ -11,6 +12,6 @@ class HealthProfessionalSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        HealthProfessional::factory(30)->create();
     }
 }

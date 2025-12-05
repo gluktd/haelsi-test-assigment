@@ -20,6 +20,7 @@ class ServiceController extends Controller
     public function index()
     {
         $services = Service::query()->latest()->paginate(15);
+
         return ServiceResource::collection($services);
     }
 
@@ -42,6 +43,7 @@ class ServiceController extends Controller
     public function store(StoreServiceRequest $request)
     {
         $service = Service::query()->create($request->validated());
+
         return (new ServiceResource($service))
             ->response()
             ->setStatusCode(201);
@@ -78,6 +80,7 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, Service $service)
     {
         $service->update($request->validated());
+
         return new ServiceResource($service);
     }
 
@@ -92,6 +95,7 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $service->delete();
+
         return response()->noContent();
     }
 }

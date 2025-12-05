@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ProfessionalTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class HealthProfessionalFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'surname' => $this->faker->lastName(),
+            'type' => $this->faker->randomElement(array_map(fn ($e) => $e->value, ProfessionalTypeEnum::cases())),
         ];
     }
 }

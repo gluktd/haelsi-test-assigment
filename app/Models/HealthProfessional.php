@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use Database\Factories\HealthProfessionalFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class HealthProfessional extends Model
 {
-    /** @use HasFactory<\Database\Factories\HealthProfessionalFactory> */
+    /** @use HasFactory<HealthProfessionalFactory> */
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'surname',
         'type',
     ];
 

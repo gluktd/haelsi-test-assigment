@@ -15,7 +15,8 @@ return new class extends Migration
         Schema::create('health_professionals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', array_map(fn(ProfessionalTypeEnum $e) => $e->value, ProfessionalTypeEnum::cases()));
+            $table->string('surname')->nullable();
+            $table->enum('type', array_map(fn (ProfessionalTypeEnum $e) => $e->value, ProfessionalTypeEnum::cases()));
             $table->timestamps();
         });
     }
