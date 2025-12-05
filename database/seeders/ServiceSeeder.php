@@ -50,8 +50,15 @@ class ServiceSeeder extends Seeder
                 'type' => ServiceTypeEnum::SURGERY,
             ],
         ];
-        foreach (ServiceTypeEnum::cases() as $case) {
-            Service::factory()->create(['type' => $case->value]);
+        foreach ($services as $case) {
+            Service::query()->updateOrCreate([
+                'name' => $case['name'],
+            ],
+                [
+                    'description' => $case['description'],
+                    'type' => $case['type'],
+                ]
+            );
         }
     }
 }

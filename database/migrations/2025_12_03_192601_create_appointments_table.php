@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('health_professional_id')->constrained('health_professionals');
             $table->foreignId('service_id')->constrained('services');
             $table->timestamp('start_date_time');
-            $table->timestamp('end_date_time');
+            $table->timestamp('end_date_time')->nullable();
             $table->boolean('confirmed')->default(false);
             $table->timestamps();
         });

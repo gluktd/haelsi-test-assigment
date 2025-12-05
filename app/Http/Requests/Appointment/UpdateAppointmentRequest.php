@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Appointment;
 
 use App\Enums\AppointmentTypeEnum;
 use App\Enums\VisitFormatEnum;
-use App\Models\HealthProfessional;
-use App\Models\Service;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -35,7 +32,7 @@ class UpdateAppointmentRequest extends FormRequest
             'service_id' => ['sometimes', 'required', 'exists:services,id'],
             'start_date_time' => ['sometimes', 'required', 'date'],
             'end_date_time' => ['sometimes', 'required', 'date', 'after:start_date_time'],
-            'visit_format' => ['sometimes', 'required', new Enum(VisitFormatEnum::class)],
+            'visit_format' => ['sometimes', new Enum(VisitFormatEnum::class)],
             'appointment_type' => ['sometimes', 'required', new Enum(AppointmentTypeEnum::class)],
             'confirmed' => ['sometimes', 'boolean'],
         ];

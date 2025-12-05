@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Appointment;
 
 use App\Enums\AppointmentTypeEnum;
 use App\Enums\VisitFormatEnum;
@@ -21,7 +21,7 @@ class StoreAppointmentRequest extends FormRequest
             'customer_email' => ['required', 'email'],
             'customer_phone_number' => ['nullable', 'string', 'max:50'],
             'start_date_time' => ['required', 'date'],
-            'end_date_time' => ['required', 'date', 'after:start_date_time'],
+            'end_date_time' => ['sometimes', 'required', 'date', 'after:start_date_time'],
             'visit_format' => ['required', new Enum(VisitFormatEnum::class)],
             'appointment_type' => ['required', new Enum(AppointmentTypeEnum::class)],
             'service_id' => ['required', 'exists:services,id'],
