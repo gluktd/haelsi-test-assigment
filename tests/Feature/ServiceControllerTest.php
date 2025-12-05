@@ -80,8 +80,4 @@ describe(ServiceController::class, function () {
             'id' => $service->id,
         ]);
     });
-    it('should return a list of services for a health professional', function () {
-        // Not defined in the current OpenAPI spec; skipping to keep tests aligned with Spectator definitions.
-        $this->markTestSkipped('Endpoint not defined in the API specification.');
-    });
 });
