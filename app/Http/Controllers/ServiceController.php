@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreServiceRequest;
-use App\Http\Requests\UpdateServiceRequest;
+use App\Http\Requests\Service\GetServicesRequest;
+use App\Http\Requests\Service\StoreServiceRequest;
+use App\Http\Requests\Service\UpdateServiceRequest;
 use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 
@@ -17,19 +18,15 @@ class ServiceController extends Controller
      *
      * @operationId listServices
      */
-    public function index()
+    public function index(GetServicesRequest $request)
     {
-        $services = Service::query()->latest()->paginate(15);
+        $query = Service::query()->latest();
+        if($request->input('type')){
+            $query->where('type',$request->input('type'));
+        }
+        $services = $query->paginate(15);
 
         return ServiceResource::collection($services);
-    }
-
-    /**
-     * Render create form (not used in API context).
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -59,14 +56,6 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         return new ServiceResource($service);
-    }
-
-    /**
-     * Render edit form (not used in API context).
-     */
-    public function edit(Service $service)
-    {
-        //
     }
 
     /**

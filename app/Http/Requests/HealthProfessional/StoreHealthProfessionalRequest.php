@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\HealthProfessional;
 
 use App\Enums\ProfessionalTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class UpdateHealthProfessionalRequest extends FormRequest
+class StoreHealthProfessionalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class UpdateHealthProfessionalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'type' => ['sometimes', 'required', new Enum(ProfessionalTypeEnum::class)],
+            'name' => ['required', 'string', 'max:255'],
+            'type' => ['required', new Enum(ProfessionalTypeEnum::class)],
         ];
     }
 }

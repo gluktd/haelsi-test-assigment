@@ -423,6 +423,38 @@
                 }
             }
         },
+        "/api/service-types": {
+            "get": {
+                "operationId": "getServiceTypes",
+                "summary": "Get list of service types",
+                "tags": [
+                    "Enum"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `GenericEnumResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/GenericEnumResource"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/health-professionals": {
             "get": {
                 "operationId": "listHealthProfessionals",

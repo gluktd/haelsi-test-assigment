@@ -8,8 +8,6 @@ enum AppointmentTypeEnum: string
     case FOLLOW_UP = 'follow_up';
     case CONTROL = 'control';
     case EMERGENCY = 'emergency';
-    case TELEMEDICINE = 'telemedicine';
-
     public function getLabel(): string
     {
         return match ($this) {

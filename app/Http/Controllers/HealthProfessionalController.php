@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreHealthProfessionalRequest;
-use App\Http\Requests\UpdateHealthProfessionalRequest;
+use App\Http\Requests\HealthProfessional\GetHealthProfessionalsRequest;
+use App\Http\Requests\HealthProfessional\StoreHealthProfessionalRequest;
+use App\Http\Requests\HealthProfessional\UpdateHealthProfessionalRequest;
 use App\Http\Resources\HealthProfessionalResource;
 use App\Models\HealthProfessional;
 
@@ -17,9 +18,13 @@ class HealthProfessionalController extends Controller
      *
      * @operationId listHealthProfessionals
      */
-    public function index()
+    public function index(GetHealthProfessionalsRequest $request)
     {
-        $pros = HealthProfessional::query()->latest()->paginate(15);
+        $query = HealthProfessional::query()->latest();
+        if($request->input('type')){
+            $query->where('type',$request->input('type'));
+        }
+        $pros = $query->paginate(15);
 
         return HealthProfessionalResource::collection($pros);
     }

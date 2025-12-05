@@ -13,3 +13,4 @@ Route::apiResource('appointments', AppointmentController::class);
 Route::get('visit-types', [EnumController::class, 'getVisitTypes']);
 Route::get('appointment-types', [EnumController::class, 'getAppointmentTypes']);
 Route::get('professional-types', [EnumController::class, 'getProfessionalTypes']);
+Route::get('service-types', [EnumController::class, 'getServiceTypes']);

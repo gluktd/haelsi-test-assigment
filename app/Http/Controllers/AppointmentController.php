@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
+use App\Notifications\AppointmentCreated;
 
 class AppointmentController extends Controller
 {
@@ -35,7 +36,7 @@ class AppointmentController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         $appointment = Appointment::query()->create($request->validated());
-
+        $appointment->notify(new AppointmentCreated());
         return (new AppointmentResource($appointment))
             ->response()
             ->setStatusCode(201);
