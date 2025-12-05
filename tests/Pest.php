@@ -7,6 +7,6 @@ use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class)
     ->beforeEach(function () {
-        Spectator::using('api.json');
+        Spectator::using('openapi.json');
         $this->seed(DatabaseSeeder::class);
     })->in('Unit', 'Feature');

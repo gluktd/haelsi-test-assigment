@@ -430,6 +430,22 @@
                 "tags": [
                     "Enum"
                 ],
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "#/components/schemas/ServiceTypeEnum"
+                        }
+                    },
+                    {
+                        "name": "visit_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Array of `GenericEnumResource`",
@@ -451,6 +467,9 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             }
@@ -462,6 +481,15 @@
                 "summary": "List paginated health professionals ordered by most recent",
                 "tags": [
                     "HealthProfessional"
+                ],
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "#/components/schemas/ProfessionalTypeEnum"
+                        }
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -602,6 +630,9 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             },
@@ -780,6 +811,15 @@
                 "tags": [
                     "Service"
                 ],
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "#/components/schemas/ServiceTypeEnum"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Paginated set of `ServiceResource`",
@@ -919,6 +959,9 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             },
@@ -1163,8 +1206,7 @@
                     "initial",
                     "follow_up",
                     "control",
-                    "emergency",
-                    "telemedicine"
+                    "emergency"
                 ],
                 "title": "AppointmentTypeEnum"
             },
@@ -1190,10 +1232,10 @@
                     "id": {
                         "type": "integer"
                     },
-                    "name": {
+                    "title": {
                         "type": "string"
                     },
-                    "type": {
+                    "subtitle": {
                         "type": "string"
                     },
                     "created_at": {
@@ -1213,8 +1255,8 @@
                 },
                 "required": [
                     "id",
-                    "name",
-                    "type",
+                    "title",
+                    "subtitle",
                     "created_at",
                     "updated_at"
                 ],
@@ -1246,7 +1288,7 @@
                     "description": {
                         "type": "string"
                     },
-                    "type": {
+                    "subtitle": {
                         "type": "string"
                     },
                     "created_at": {
@@ -1268,7 +1310,7 @@
                     "id",
                     "name",
                     "description",
-                    "type",
+                    "subtitle",
                     "created_at",
                     "updated_at"
                 ],

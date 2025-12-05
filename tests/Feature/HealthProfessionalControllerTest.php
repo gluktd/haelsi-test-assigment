@@ -7,7 +7,6 @@ use App\Models\HealthProfessional;
 describe(HealthProfessionalController::class, function () {
     it('should return a list of health professionals', function () {
         $response = $this->getJson('/api/health-professionals');
-
         $response->assertValidRequest()
             ->assertValidResponse(200);
     });

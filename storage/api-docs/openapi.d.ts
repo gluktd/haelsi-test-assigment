@@ -47,14 +47,21 @@ declare namespace Components {
         /**
          * AppointmentTypeEnum
          */
-        export type AppointmentTypeEnum = "initial" | "follow_up" | "control" | "emergency" | "telemedicine";
+        export type AppointmentTypeEnum = "initial" | "follow_up" | "control" | "emergency";
+        /**
+         * GenericEnumResource
+         */
+        export interface GenericEnumResource {
+            value: string;
+            title: string;
+        }
         /**
          * HealthProfessionalResource
          */
         export interface HealthProfessionalResource {
             id: number;
-            name: string;
-            type: string;
+            title: string;
+            subtitle: string;
             created_at: string | null; // date-time
             updated_at: string | null; // date-time
         }
@@ -69,7 +76,7 @@ declare namespace Components {
             id: number;
             name: string;
             description: string;
-            type: string;
+            subtitle: string;
             created_at: string | null; // date-time
             updated_at: string | null; // date-time
         }
@@ -83,12 +90,12 @@ declare namespace Components {
         export interface StoreAppointmentRequest {
             customer_email: string; // email
             customer_phone_number?: string | null;
-            health_professional_id: number;
-            service_id: number;
             start_date_time: string; // date-time
             end_date_time: string; // date-time
             visit_format: /* VisitFormatEnum */ VisitFormatEnum;
             appointment_type: /* AppointmentTypeEnum */ AppointmentTypeEnum;
+            service_id: number;
+            health_professional_id: number;
         }
         /**
          * StoreHealthProfessionalRequest
@@ -221,6 +228,13 @@ declare namespace Paths {
             export type $404 = Components.Responses.ModelNotFoundException;
         }
     }
+    namespace GetAppointmentTypes {
+        namespace Responses {
+            export interface $200 {
+                data: /* GenericEnumResource */ Components.Schemas.GenericEnumResource[];
+            }
+        }
+    }
     namespace GetHealthProfessional {
         namespace Parameters {
             export type HealthProfessional = number;
@@ -235,6 +249,13 @@ declare namespace Paths {
             export type $404 = Components.Responses.ModelNotFoundException;
         }
     }
+    namespace GetProfessionalTypes {
+        namespace Responses {
+            export interface $200 {
+                data: /* GenericEnumResource */ Components.Schemas.GenericEnumResource[];
+            }
+        }
+    }
     namespace GetService {
         namespace Parameters {
             export type Service = number;
@@ -247,6 +268,29 @@ declare namespace Paths {
                 data: /* ServiceResource */ Components.Schemas.ServiceResource;
             }
             export type $404 = Components.Responses.ModelNotFoundException;
+        }
+    }
+    namespace GetServiceTypes {
+        namespace Parameters {
+            export type Type = /* ServiceTypeEnum */ Components.Schemas.ServiceTypeEnum;
+            export type VisitType = string;
+        }
+        export interface QueryParameters {
+            type?: Parameters.Type;
+            visit_type?: Parameters.VisitType;
+        }
+        namespace Responses {
+            export interface $200 {
+                data: /* GenericEnumResource */ Components.Schemas.GenericEnumResource[];
+            }
+            export type $422 = Components.Responses.ValidationException;
+        }
+    }
+    namespace GetVisitTypes {
+        namespace Responses {
+            export interface $200 {
+                data: /* GenericEnumResource */ Components.Schemas.GenericEnumResource[];
+            }
         }
     }
     namespace ListAppointments {
@@ -292,6 +336,12 @@ declare namespace Paths {
         }
     }
     namespace ListHealthProfessionals {
+        namespace Parameters {
+            export type Type = /* ProfessionalTypeEnum */ Components.Schemas.ProfessionalTypeEnum;
+        }
+        export interface QueryParameters {
+            type?: Parameters.Type;
+        }
         namespace Responses {
             export interface $200 {
                 data: /* HealthProfessionalResource */ Components.Schemas.HealthProfessionalResource[];
@@ -331,9 +381,16 @@ declare namespace Paths {
                     total: number;
                 };
             }
+            export type $422 = Components.Responses.ValidationException;
         }
     }
     namespace ListServices {
+        namespace Parameters {
+            export type Type = /* ServiceTypeEnum */ Components.Schemas.ServiceTypeEnum;
+        }
+        export interface QueryParameters {
+            type?: Parameters.Type;
+        }
         namespace Responses {
             export interface $200 {
                 data: /* ServiceResource */ Components.Schemas.ServiceResource[];
@@ -373,6 +430,7 @@ declare namespace Paths {
                     total: number;
                 };
             }
+            export type $422 = Components.Responses.ValidationException;
         }
     }
     namespace UpdateAppointment {
@@ -482,13 +540,45 @@ export interface OperationMethods {
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.DeleteAppointment.Responses.$204>
   /**
+   * getVisitTypes - Get list of visit types
+   */
+  'getVisitTypes'(
+    parameters?: Parameters<UnknownParamsObject> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.GetVisitTypes.Responses.$200>
+  /**
+   * getAppointmentTypes - Get list of appointment types
+   */
+  'getAppointmentTypes'(
+    parameters?: Parameters<UnknownParamsObject> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.GetAppointmentTypes.Responses.$200>
+  /**
+   * getProfessionalTypes - Get list of professional types
+   */
+  'getProfessionalTypes'(
+    parameters?: Parameters<UnknownParamsObject> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.GetProfessionalTypes.Responses.$200>
+  /**
+   * getServiceTypes - Get list of service types
+   */
+  'getServiceTypes'(
+    parameters?: Parameters<Paths.GetServiceTypes.QueryParameters> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.GetServiceTypes.Responses.$200>
+  /**
    * listHealthProfessionals - List paginated health professionals ordered by most recent
    * 
    * Returns a paginated collection of health professionals for use in
    * lists, tables, or infinite scrolling UIs.
    */
   'listHealthProfessionals'(
-    parameters?: Parameters<UnknownParamsObject> | null,
+    parameters?: Parameters<Paths.ListHealthProfessionals.QueryParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.ListHealthProfessionals.Responses.$200>
@@ -542,7 +632,7 @@ export interface OperationMethods {
    * tables, or infinite scroll views.
    */
   'listServices'(
-    parameters?: Parameters<UnknownParamsObject> | null,
+    parameters?: Parameters<Paths.ListServices.QueryParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.ListServices.Responses.$200>
@@ -592,7 +682,7 @@ export interface OperationMethods {
 }
 
 export interface PathsDictionary {
-  ['/appointments']: {
+  ['/api/appointments']: {
     /**
      * listAppointments - List paginated appointments ordered by most recent
      * 
@@ -616,7 +706,7 @@ export interface PathsDictionary {
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.CreateAppointment.Responses.$201>
   }
-  ['/appointments/{appointment}']: {
+  ['/api/appointments/{appointment}']: {
     /**
      * getAppointment - Get a single appointment by ID
      * 
@@ -650,7 +740,47 @@ export interface PathsDictionary {
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.DeleteAppointment.Responses.$204>
   }
-  ['/health-professionals']: {
+  ['/api/visit-types']: {
+    /**
+     * getVisitTypes - Get list of visit types
+     */
+    'get'(
+      parameters?: Parameters<UnknownParamsObject> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.GetVisitTypes.Responses.$200>
+  }
+  ['/api/appointment-types']: {
+    /**
+     * getAppointmentTypes - Get list of appointment types
+     */
+    'get'(
+      parameters?: Parameters<UnknownParamsObject> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.GetAppointmentTypes.Responses.$200>
+  }
+  ['/api/professional-types']: {
+    /**
+     * getProfessionalTypes - Get list of professional types
+     */
+    'get'(
+      parameters?: Parameters<UnknownParamsObject> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.GetProfessionalTypes.Responses.$200>
+  }
+  ['/api/service-types']: {
+    /**
+     * getServiceTypes - Get list of service types
+     */
+    'get'(
+      parameters?: Parameters<Paths.GetServiceTypes.QueryParameters> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.GetServiceTypes.Responses.$200>
+  }
+  ['/api/health-professionals']: {
     /**
      * listHealthProfessionals - List paginated health professionals ordered by most recent
      * 
@@ -658,7 +788,7 @@ export interface PathsDictionary {
      * lists, tables, or infinite scrolling UIs.
      */
     'get'(
-      parameters?: Parameters<UnknownParamsObject> | null,
+      parameters?: Parameters<Paths.ListHealthProfessionals.QueryParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.ListHealthProfessionals.Responses.$200>
@@ -674,7 +804,7 @@ export interface PathsDictionary {
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.CreateHealthProfessional.Responses.$201>
   }
-  ['/health-professionals/{healthProfessional}']: {
+  ['/api/health-professionals/{healthProfessional}']: {
     /**
      * getHealthProfessional - Get a single health professional by ID
      * 
@@ -708,7 +838,7 @@ export interface PathsDictionary {
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.DeleteHealthProfessional.Responses.$204>
   }
-  ['/services']: {
+  ['/api/services']: {
     /**
      * listServices - List paginated services ordered by most recent
      * 
@@ -716,7 +846,7 @@ export interface PathsDictionary {
      * tables, or infinite scroll views.
      */
     'get'(
-      parameters?: Parameters<UnknownParamsObject> | null,
+      parameters?: Parameters<Paths.ListServices.QueryParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.ListServices.Responses.$200>
@@ -732,7 +862,7 @@ export interface PathsDictionary {
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.CreateService.Responses.$201>
   }
-  ['/services/{service}']: {
+  ['/api/services/{service}']: {
     /**
      * getService - Get a single service by ID
      * 
@@ -773,6 +903,7 @@ export type Client = OpenAPIClient<OperationMethods, PathsDictionary>
 
 export type AppointmentResource = Components.Schemas.AppointmentResource;
 export type AppointmentTypeEnum = Components.Schemas.AppointmentTypeEnum;
+export type GenericEnumResource = Components.Schemas.GenericEnumResource;
 export type HealthProfessionalResource = Components.Schemas.HealthProfessionalResource;
 export type ProfessionalTypeEnum = Components.Schemas.ProfessionalTypeEnum;
 export type ServiceResource = Components.Schemas.ServiceResource;

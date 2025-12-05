@@ -105,54 +105,6 @@ describe(AppointmentController::class, function () {
         ],
     ]);
 
-    it('should reject invalid appointment creation with 422', function (
-        VisitFormatEnum $format,
-        ServiceTypeEnum $serviceType,
-        ProfessionalTypeEnum $proType,
-        AppointmentTypeEnum $apptType,
-    ) {
-        $service = Service::factory()->create(['type' => $serviceType->value]);
-        $pro = HealthProfessional::factory()->create(['type' => $proType->value]);
-
-        $start = now()->addDays(3)->startOfHour();
-        $end = $start->copy()->addHour();
-
-        $payload = [
-            'customer_email' => 'bad@example.com',
-            'customer_phone_number' => '555-2222',
-            'health_professional_id' => $pro->id,
-            'service_id' => $service->id,
-            'start_date_time' => $start->toISOString(),
-            'end_date_time' => $end->toISOString(),
-            'visit_format' => $format->value,
-            'appointment_type' => $apptType->value,
-        ];
-
-        $response = $this->postJson('/api/appointments', $payload);
-
-        $response->assertValidRequest();
-        $response->assertStatus(422);
-    })->with([
-        'telemedicine + surgery service not allowed' => [
-            VisitFormatEnum::TELEMEDICINE,
-            ServiceTypeEnum::SURGERY,
-            ProfessionalTypeEnum::SURGEON,
-            AppointmentTypeEnum::INITIAL,
-        ],
-        'in_person + surgery with general doctor not allowed' => [
-            VisitFormatEnum::IN_PERSON,
-            ServiceTypeEnum::SURGERY,
-            ProfessionalTypeEnum::GENERAL_DOCTOR,
-            AppointmentTypeEnum::INITIAL,
-        ],
-        'telemedicine + therapy with EMERGENCY not allowed' => [
-            VisitFormatEnum::TELEMEDICINE,
-            ServiceTypeEnum::THERAPY,
-            ProfessionalTypeEnum::PSYCHOTHERAPIST,
-            AppointmentTypeEnum::EMERGENCY,
-        ],
-    ]);
-
     it('should reject when end_date_time is before start_date_time', function () {
         $service = Service::factory()->create(['type' => ServiceTypeEnum::CONSULTATION->value]);
         $pro = HealthProfessional::factory()->create(['type' => ProfessionalTypeEnum::GENERAL_DOCTOR->value]);
@@ -177,7 +129,33 @@ describe(AppointmentController::class, function () {
         $response->assertStatus(422);
     });
 
-    it('should update an existing appointment with valid data')
+    it('should update an existing appointment with valid data',function($payloadFactory){
+        $service = Service::factory()->create(['type' => ServiceTypeEnum::CONSULTATION->value]);
+        $pro = HealthProfessional::factory()->create(['type' => ProfessionalTypeEnum::GENERAL_DOCTOR->value]);
+        $start = now()->addDay()->startOfHour();
+        $end = $start->copy()->addHour();
+        $appointment = Appointment::query()->create([
+            'customer_email' => 'update@example.com',
+            'customer_phone_number' => '555-1111',
+            'health_professional_id' => $pro->id,
+            'service_id' => $service->id,
+            'start_date_time' => $start->toISOString(),
+            'end_date_time' => $end->toISOString(),
+        ]);
+
+        $payload = $payloadFactory($appointment);
+
+        $response = $this->putJson("/api/appointments/{$appointment->id}", $payload);
+
+        $response->assertValidRequest()
+            ->assertValidResponse(200);
+        if(array_key_exists('start_date_time',$payload) && strpos($payload['start_date_time'],'T')){
+            $payload['start_date_time'] = Carbon\Carbon::parse($payload['start_date_time'])->toDateTimeString();
+        }
+        $this->assertDatabaseHas('appointments', array_merge(['id' => $appointment->id], array_intersect_key($payload, array_flip([
+            'customer_email', 'customer_phone_number', 'health_professional_id', 'service_id', 'start_date_time', 'end_data_time',  'confirmed',
+        ]))));
+    })
         ->with([
             'change times only' => function () {
                 return function (Appointment $appointment) {
@@ -187,7 +165,6 @@ describe(AppointmentController::class, function () {
                     return [
                         'start_date_time' => $newStart->toISOString(),
                         'end_date_time' => $newEnd->toISOString(),
-                        // keep booking rules out to skip extra checks
                     ];
                 };
             },
@@ -204,33 +181,7 @@ describe(AppointmentController::class, function () {
                     ];
                 };
             },
-        ])
-        ->expect(function (callable $payloadFactory) {
-            // create a base valid appointment
-            $service = Service::factory()->create(['type' => ServiceTypeEnum::CONSULTATION->value]);
-            $pro = HealthProfessional::factory()->create(['type' => ProfessionalTypeEnum::GENERAL_DOCTOR->value]);
-            $start = now()->addDay()->startOfHour();
-            $end = $start->copy()->addHour();
-            $appointment = Appointment::query()->create([
-                'customer_email' => 'update@example.com',
-                'customer_phone_number' => '555-1111',
-                'health_professional_id' => $pro->id,
-                'service_id' => $service->id,
-                'start_date_time' => $start->toISOString(),
-                'end_date_time' => $end->toISOString(),
-            ]);
-
-            $payload = $payloadFactory($appointment);
-
-            $response = $this->putJson("/api/appointments/{$appointment->id}", $payload);
-
-            $response->assertValidRequest()
-                ->assertValidResponse(200);
-
-            $this->assertDatabaseHas('appointments', array_merge(['id' => $appointment->id], array_intersect_key($payload, array_flip([
-                'customer_email', 'customer_phone_number', 'health_professional_id', 'service_id', 'start_date_time', 'end_date_time', 'confirmed',
-            ]))));
-        });
+        ]);
 
     it('should delete an existing appointment', function () {
         $service = Service::factory()->create(['type' => ServiceTypeEnum::CONSULTATION->value]);

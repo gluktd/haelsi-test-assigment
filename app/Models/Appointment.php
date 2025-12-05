@@ -46,4 +46,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(HealthProfessional::class);
     }
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->customer_email;
+    }
 }

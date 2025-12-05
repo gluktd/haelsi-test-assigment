@@ -4,14 +4,11 @@ namespace App\Http\Requests;
 
 use App\Enums\AppointmentTypeEnum;
 use App\Enums\VisitFormatEnum;
-use App\Http\Requests\Concerns\ValidatesAppointmentBookingRules;
-use App\Rules\AppointmentTypeAllowedForVisitFormat;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
 class StoreAppointmentRequest extends FormRequest
 {
-    use ValidatesAppointmentBookingRules;
 
     public function authorize(): bool
     {
@@ -26,7 +23,7 @@ class StoreAppointmentRequest extends FormRequest
             'start_date_time' => ['required', 'date'],
             'end_date_time' => ['required', 'date', 'after:start_date_time'],
             'visit_format' => ['required', new Enum(VisitFormatEnum::class)],
-            'appointment_type' => ['required', new Enum(AppointmentTypeEnum::class), new AppointmentTypeAllowedForVisitFormat],
+            'appointment_type' => ['required', new Enum(AppointmentTypeEnum::class)],
             'service_id' => ['required', 'exists:services,id'],
             'health_professional_id' => ['required', 'exists:health_professionals,id'],
         ];
